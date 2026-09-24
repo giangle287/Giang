@@ -12,6 +12,15 @@ db/schema.sql       Lược đồ CSDL (tự tạo bảng khi server chạy)
 docker-compose.yml  Chạy nhanh PostgreSQL bằng Docker (tùy chọn)
 ```
 
+## Cài tự động (làm thay Bước 1–3)
+
+- **Windows**: mở PowerShell bằng "Run as Administrator", `cd` vào thư mục dự án rồi chạy
+  `powershell -ExecutionPolicy Bypass -File scripts\cai-dat-windows.ps1`
+- **Ubuntu / macOS**: `bash scripts/cai-dat-linux-mac.sh` (macOS cần có Homebrew: https://brew.sh)
+
+Script sẽ cài Node.js LTS và PostgreSQL, tạo CSDL `azoffice`, ghi file `.env` và chạy `npm install`.
+Xong thì chỉ cần `npm start`. Nếu muốn tự làm từng bước, xem bên dưới.
+
 ## Bước 1 – Cài phần mềm
 
 - **Node.js 18 trở lên**: https://nodejs.org (chọn bản LTS)
