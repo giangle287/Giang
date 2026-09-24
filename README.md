@@ -62,25 +62,24 @@ Mở http://localhost:3000. Lần đầu mở, dữ liệu mẫu được ghi v�
 lên server (khoảng 0,4 giây sau mỗi thao tác). Máy khác trong cùng mạng truy cập qua
 `http://<IP-máy-chủ>:3000`.
 
-## Đưa lên máy chủ thật (VPS)
+## Đưa lên tên miền (VPS Ubuntu)
 
-1. Làm Bước 1–4 trên VPS (Ubuntu).
-2. Chạy nền và tự khởi động lại bằng PM2:
+1. Thuê VPS Ubuntu 22.04/24.04 (tối thiểu 1 CPU, 1–2 GB RAM) và mua tên miền.
+2. Trỏ tên miền: tại trang quản lý DNS, tạo bản ghi **A**, tên `@` (hoặc tên miền con, ví dụ `kinhdoanh`),
+   giá trị là **IP của VPS**. Chờ 5–30 phút.
+3. Đăng nhập VPS: `ssh root@<IP-VPS>`, rồi:
    ```bash
-   sudo npm install -g pm2
-   pm2 start server.js --name az-office
-   pm2 save && pm2 startup
+   apt-get update && apt-get install -y git
+   git clone -b claude/server-postgresql-setup-g6evcv https://github.com/giangle287/Giang.git /opt/az-office
+   cd /opt/az-office
+   bash scripts/cai-dat-linux-mac.sh
+   sudo bash scripts/trien-khai-vps.sh ten-mien-cua-ban.vn email@cua-ban.vn
    ```
-3. Nên đặt Nginx phía trước, bật HTTPS (Let's Encrypt) và bật `APP_USER`/`APP_PASSWORD`.
-   Cấu hình Nginx tối thiểu:
-   ```nginx
-   server {
-     server_name kinhdoanh.ten-mien-cua-ban.vn;
-     location / { proxy_pass http://127.0.0.1:3000; proxy_set_header Host $host; }
-   }
-   ```
-   Sau đó chạy: `sudo certbot --nginx`.
-4. Không mở cổng 5432 ra Internet.
+   Script thứ hai sẽ: bắt đặt mật khẩu đăng nhập trang, chạy nền bằng PM2 (tự khởi động lại khi VPS
+   reboot), cấu hình Nginx, bật tường lửa, cấp HTTPS miễn phí, sao lưu CSDL mỗi ngày vào `/var/backups/azoffice`.
+4. Cập nhật code về sau: `cd /opt/az-office && git pull && npm install && pm2 restart az-office`.
+
+Không mở cổng 5432 (PostgreSQL) ra Internet; script chỉ mở SSH, HTTP và HTTPS.
 
 ## Sao lưu và khôi phục
 
